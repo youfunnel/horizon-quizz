@@ -1,0 +1,16 @@
+{
+  "name": "horizon-finance-quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Quiz funnel de diagnostic financier pour Horizon Finance (Faites Parler Vos Chiffres).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

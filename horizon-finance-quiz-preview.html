@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aperçu - Diagnostic financier | Horizon Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<style>
+/* =====================================================================
+   HORIZON FINANCE - Système de design « VB »
+   Open Sans · Navy #13204D · Rouge unique #EC3E2D (aucun cuivre)
+   Sections rythmées blanc / gris / navy ; navy-deep = climax (CTA, footer)
+   Signature : l'effet ciseau (CA navy qui monte, marge rouge qui stagne)
+   ===================================================================== */
+
+:root {
+  --navy: #13204d;
+  --navy-soft: #202d59;
+  --navy-deep: #0d1838;
+  --navy-line: rgba(255, 255, 255, 0.13);
+
+  --red: #ec3e2d;
+  --red-soft: rgba(236, 62, 45, 0.12);
+
+  --ink: #1c2333;
+  --muted: #777771;
+  --line: #e9e9e9;
+  --line-strong: #d9dbe0;
+  --grey: #f4f5f7;
+  --white: #ffffff;
+  --paper: #ffffff;
+  --card: #f4f5f7;
+
+  --cream: #ffffff;
+  --cream-soft: rgba(255, 255, 255, 0.86);
+
+  /* Alias hérités (sécurité pour d'éventuelles références inline) */
+  --copper: var(--red);
+  --copper-bright: var(--red);
+  --copper-soft: var(--red-soft);
+  --ink-soft: var(--muted);
+  --paper-2: var(--grey);
+
+  --font: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --display: var(--font);
+  --body: var(--font);
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-btn: 8px;
+  --radius-lg: 16px;
+
+  --maxw: 100%;
+  --maxw-audit: 100%;
+  --grad-navy: linear-gradient(160deg, #0d1838 0%, #13204d 55%, #202d59 100%);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ----------------------------- Reset ------------------------------ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.6;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input { font-family: inherit; }
+
+/* --------------------------- App shell ---------------------------- */
+.app { min-height: 100dvh; display: flex; flex-direction: column; }
+.app--dark { background: var(--grad-navy); color: var(--white); }
+
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 28px 20px 40px; }
+.panel { width: 100%; max-width: var(--maxw); }
+.panel--audit { max-width: var(--maxw-audit); }
+
+.step-in { animation: stepIn 0.42s var(--ease) both; }
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------------------------- Eyebrow ---------------------------- */
+.eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+
+/* --------------------------- Typography --------------------------- */
+.q-title {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5.2vw, 2.125rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.q-help { margin-top: 12px; font-size: 1rem; color: var(--muted); }
+
+/* ----------------------------- Buttons ---------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font);
+  font-size: clamp(1rem, 4.4vw, 1.125rem);
+  font-weight: 700;
+  padding: 17px 30px;
+  border-radius: var(--radius-btn);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease),
+    background 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.btn svg { flex-shrink: 0; }
+.btn:active { transform: translateY(0) scale(0.99); }
+.btn--copper {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(236, 62, 45, 0.55);
+}
+.btn--copper:hover {
+  background: var(--red);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -10px rgba(236, 62, 45, 0.7);
+}
+.btn--navy { background: var(--navy); color: var(--white); }
+.btn--navy:hover { background: var(--navy-soft); transform: translateY(-2px); }
+.btn--block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 8px 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.18s var(--ease);
+}
+.btn-ghost:hover { color: var(--navy); }
+.app--dark .btn-ghost { color: var(--cream-soft); }
+.app--dark .btn-ghost:hover { color: #fff; }
+
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: 6px; }
+
+/* --------------------------- Progress bar ------------------------- */
+.progress {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--white);
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.progress__row {
+  max-width: var(--maxw);
+  margin: 0 auto 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.progress__brand {
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--navy);
+}
+.progress__count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.progress__track {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  height: 4px;
+  background: var(--grey);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress__fill {
+  height: 100%;
+  background: var(--red);
+  border-radius: 999px;
+  transition: width 0.55s var(--ease);
+}
+
+/* --------------------------- Option cards ------------------------- */
+.options { margin-top: 26px; display: flex; flex-direction: column; gap: 12px; }
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  background: var(--grey);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 17px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  transition: border-color 0.16s var(--ease), background 0.16s var(--ease),
+    transform 0.16s var(--ease), box-shadow 0.16s var(--ease);
+}
+.option:hover {
+  border-color: var(--red);
+  transform: translateX(3px);
+  box-shadow: 0 16px 36px -26px rgba(19, 32, 77, 0.4);
+}
+.option__tick {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  transition: border-color 0.16s var(--ease), background 0.16s var(--ease);
+  position: relative;
+}
+.option:hover .option__tick { border-color: var(--red); }
+.option--selected {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #fff;
+  transform: translateX(3px);
+}
+.option--selected .option__tick { border-color: var(--red); background: var(--red); }
+.option--selected .option__tick::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 7px;
+  height: 11px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+/* --------------------------- Welcome ------------------------------ */
+.welcome { text-align: center; }
+.brand-mark {
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  margin-bottom: 26px;
+}
+.welcome__title {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(2rem, 8.5vw, 2.875rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.welcome__title em { font-style: normal; color: var(--red); }
+.rule { width: 54px; height: 3px; background: var(--red); margin: 24px auto; border: none; }
+.welcome__sub {
+  font-size: clamp(1rem, 3.6vw, 1.125rem);
+  color: var(--cream-soft);
+  max-width: 30em;
+  margin: 0 auto 32px;
+}
+.welcome__cta { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.meta-line {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.meta-line .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--red); display: inline-block; }
+
+/* Badge "Vu sur Le Figaro" */
+.figaro {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 7px 14px;
+  border-radius: 40px;
+}
+.figaro strong { font-family: var(--font); color: #fff; font-weight: 800; }
+
+/* --------------------------- Social proof ------------------------- */
+.proof { text-align: center; }
+.proof__eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 18px;
+}
+.proof__lead {
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 5vw, 1.6rem);
+  line-height: 1.28;
+  color: #fff;
+  max-width: 22em;
+  margin: 0 auto 28px;
+}
+.proof__lead em { font-style: normal; color: var(--red); }
+.quote {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--navy-line);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+  text-align: left;
+  max-width: 30em;
+  margin: 0 auto 26px;
+}
+.quote__text { font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.6; }
+.quote__author { margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+.quote__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+.quote__name { font-weight: 700; font-size: 0.9rem; color: #fff; }
+.quote__role { font-size: 0.82rem; color: rgba(255, 255, 255, 0.6); }
+.proof__stat { display: flex; gap: 16px; align-items: baseline; justify-content: center; margin-bottom: 30px; }
+.proof__statnum {
+  font-family: var(--font);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.proof__statlabel { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); max-width: 16em; text-align: left; }
+
+/* ----------------------------- Gate ------------------------------- */
+.gate { text-align: center; }
+.gate__title {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 6vw, 2.125rem);
+  line-height: 1.18;
+  color: var(--navy);
+}
+.gate__sub { margin: 14px auto 28px; color: var(--muted); max-width: 28em; }
+.form { display: flex; flex-direction: column; gap: 12px; max-width: 26em; margin: 0 auto; text-align: left; }
+.field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease);
+}
+.field input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 2px rgba(236, 62, 45, 0.15); }
+.field input::placeholder { color: #9aa0ab; }
+.field__error { font-size: 0.8rem; color: var(--red); margin-top: 5px; }
+.gate__privacy {
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: center;
+}
+
+/* ---------------------------- Loading ----------------------------- */
+.loading { text-align: center; max-width: 30em; margin: 0 auto; }
+.loading__title {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 5vw, 1.85rem);
+  color: #fff;
+  margin-bottom: 8px;
+}
+.loading__sub { color: rgba(255, 255, 255, 0.7); margin-bottom: 34px; font-size: 0.95rem; }
+.scanner { width: 86px; height: 86px; margin: 0 auto 32px; position: relative; }
+.scanner svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.scanner__track { fill: none; stroke: var(--navy-line); stroke-width: 6; }
+.scanner__arc {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 251;
+  animation: spinArc 1.4s linear infinite;
+}
+@keyframes spinArc {
+  0% { stroke-dashoffset: 251; transform: rotate(0deg); transform-origin: center; }
+  50% { stroke-dashoffset: 70; }
+  100% { stroke-dashoffset: 251; transform: rotate(360deg); transform-origin: center; }
+}
+.steps { display: flex; flex-direction: column; gap: 14px; text-align: left; max-width: 24em; margin: 0 auto; }
+.steps__item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 0.4;
+  transition: opacity 0.4s var(--ease), color 0.4s var(--ease);
+}
+.steps__item--active { opacity: 1; color: #fff; }
+.steps__check {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--navy-line);
+  display: grid;
+  place-items: center;
+  transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
+}
+.steps__item--active .steps__check { border-color: var(--red); background: var(--red); }
+.steps__check svg { width: 11px; height: 11px; opacity: 0; transition: opacity 0.3s var(--ease) 0.1s; }
+.steps__item--active .steps__check svg { opacity: 1; }
+
+/* ----------------------------- Audit ------------------------------ */
+.audit { background: var(--white); }
+.audit__head { background: var(--grad-navy); color: #fff; padding: 44px 24px 40px; }
+.audit__head-inner { max-width: var(--maxw-audit); margin: 0 auto; }
+.audit__meta {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.audit__profil {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.audit__tagline {
+  margin-top: 14px;
+  font-size: clamp(1.05rem, 3.6vw, 1.25rem);
+  color: var(--cream-soft);
+  font-family: var(--font);
+  font-weight: 400;
+  max-width: 28em;
+}
+.audit__body { max-width: var(--maxw-audit); margin: 0 auto; padding: 8px 24px 60px; }
+.section { padding-top: 40px; }
+.section__label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section__label::before { content: ""; width: 26px; height: 2px; background: var(--red); }
+.prose { font-size: 1.03rem; line-height: 1.7; color: var(--ink); }
+.prose + .prose { margin-top: 14px; }
+
+/* Chiffrage */
+.figure-card {
+  margin-top: 20px;
+  background: var(--grey);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.figure-card__num {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 8vw, 2.6rem);
+  color: var(--navy);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.figure-card__unit { font-size: 1rem; color: var(--muted); font-weight: 600; margin-left: 6px; }
+.figure-card__text { margin-top: 12px; color: var(--ink); font-size: 1rem; line-height: 1.55; }
+
+/* Observations */
+.obs { margin-top: 18px; display: flex; flex-direction: column; gap: 12px; }
+.obs__item {
+  display: flex;
+  gap: 13px;
+  background: var(--grey);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 17px;
+}
+.obs__dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-top: 8px; }
+.obs__text { font-size: 1rem; color: var(--ink); line-height: 1.5; }
+
+/* Méthode / 3 piliers */
+.method__accroche {
+  font-family: var(--font);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 4px 0 22px;
+}
+.pillars { display: flex; flex-direction: column; gap: 12px; }
+.pillar {
+  display: flex;
+  gap: 16px;
+  background: var(--grey);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.pillar__no {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.pillar__title { font-weight: 700; font-size: 1.02rem; color: var(--navy); margin-bottom: 4px; }
+.pillar__text { font-size: 0.95rem; color: var(--muted); line-height: 1.55; }
+
+/* CTA final (navy-deep = climax) */
+.cta {
+  margin-top: 44px;
+  background: var(--navy-deep);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 38px 28px;
+  text-align: center;
+}
+.cta__label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+}
+.cta__title {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5.5vw, 1.9rem);
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.cta__text { color: var(--cream-soft); max-width: 32em; margin: 0 auto 26px; font-size: 1rem; line-height: 1.6; }
+.cta__reassure {
+  margin-top: 20px;
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ------------------------- Scissor chart -------------------------- */
+.scissor {
+  margin-top: 22px;
+  background: var(--grey);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 18px 14px;
+}
+.scissor svg { width: 100%; height: auto; display: block; }
+.scissor__legend { display: flex; gap: 20px; justify-content: center; margin-top: 10px; font-size: 0.82rem; color: var(--muted); }
+.scissor__key { display: inline-flex; align-items: center; gap: 7px; }
+.scissor__swatch { width: 16px; height: 3px; border-radius: 2px; }
+.path-ca {
+  fill: none;
+  stroke: var(--navy);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw 1.3s var(--ease) 0.2s forwards;
+}
+.path-marge {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw 1.3s var(--ease) 0.5s forwards;
+}
+.gap-fill { fill: var(--red-soft); opacity: 0; animation: fadeIn 0.8s var(--ease) 1.4s forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ----------------------------- Footer ----------------------------- */
+.foot {
+  text-align: center;
+  padding: 30px 20px 38px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: var(--navy-deep);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.foot a { color: rgba(255, 255, 255, 0.72); }
+
+/* --------------------------- Responsive --------------------------- */
+@media (min-width: 721px) {
+  .stage { padding: 48px clamp(28px, 5vw, 72px); }
+  .progress { padding: 16px clamp(28px, 5vw, 72px) 12px; }
+  .audit__head { padding: 48px clamp(28px, 5vw, 72px) 40px; }
+  .audit__body { padding: 8px clamp(28px, 5vw, 72px) 60px; }
+}
+
+/* Pleine largeur : réponses sur 2 colonnes sur grand écran */
+@media (min-width: 900px) {
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
+/* ------------------------- Reduced motion ------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .path-ca, .path-marge { stroke-dashoffset: 0; }
+  .gap-fill { opacity: 1; }
+  .scanner__arc { animation: none; stroke-dashoffset: 120; }
+}
+
+/* =====================================================================
+   AJUSTEMENTS - emojis réponses, accueil, hero résultat centré, CTA répétés
+   ===================================================================== */
+
+/* Emoji + libellé dans les cartes-réponses (puce de sélection à droite) */
+.option__emoji { flex: 0 0 auto; font-size: 1.3rem; line-height: 1; }
+.option__label { flex: 1; }
+
+/* Accueil : eyebrow en phrase (pas de capitales) + ligne de positionnement */
+.welcome__eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 0.92rem; margin-bottom: 22px; }
+.welcome__sub--alt { margin-top: 14px; font-size: 0.98rem; color: rgba(255, 255, 255, 0.62); }
+
+/* Page résultat : hero entièrement centré */
+.audit__head-inner { text-align: center; }
+.audit__meta { justify-content: center; }
+.audit__tagline { margin-left: auto; margin-right: auto; }
+
+/* CTA répété dans la page de résultat */
+.cta-inline { margin-top: 28px; text-align: center; }
+.cta-sub { margin-top: 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); }
+.cta-sub--light { color: rgba(255, 255, 255, 0.72); }
+
+
+/* --- habillage aperçu (hors application) --- */
+.pv-badge{position:fixed;left:12px;bottom:12px;z-index:60;font:600 11px/1 'Open Sans',system-ui,sans-serif;letter-spacing:.04em;color:#fff;background:rgba(19,32,77,.82);border:1px solid rgba(255,255,255,.2);padding:7px 12px;border-radius:999px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.pv-reset{position:fixed;right:12px;bottom:12px;z-index:60;font:600 12px/1 'Open Sans',system-ui,sans-serif;color:#13204D;background:#fff;border:1px solid rgba(19,32,77,.18);padding:9px 14px;border-radius:999px;box-shadow:0 6px 18px -8px rgba(19,32,77,.5);cursor:pointer}
+.pv-reset:hover{background:#F4F5F7}
+@media (max-width:520px){.pv-badge{display:none}}
+
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div class="pv-badge">Aperçu · aucune donnée n’est envoyée</div>
+<button class="pv-reset" id="pv-reset" type="button">↻ Recommencer</button>
+<script>
+// =====================================================================
+// CONFIGURATION DU QUIZ - Horizon Finance
+// ---------------------------------------------------------------------
+// Tout le contenu éditable du quiz est ici. Pour modifier une question,
+// une réponse ou le scoring, il suffit d'éditer ce fichier.
+//
+// Les 5 axes de diagnostic correspondent aux 5 pain points :
+//   rentabilite -> "Je fais du chiffre mais il ne reste pas assez"
+//   tresorerie  -> "Ma trésorerie est trop tendue"
+//   visibilite  -> "Je ne sais pas où part ma marge"
+//   pricing     -> "Mes offres / mes prix ne sont pas assez rentables"
+//   decision    -> "Je manque de visibilité pour décider"
+//
+// Chaque option ajoute des points (`scores`) à un ou plusieurs axes.
+// L'axe le plus élevé en fin de quiz détermine le profil (archétype)
+// et donc l'audit personnalisé affiché.
+// =====================================================================
+const AXES = ['rentabilite', 'tresorerie', 'visibilite', 'pricing', 'decision'];
+
+// Libellés des secteurs (Q1) - utilisés pour personnaliser l'audit.
+const SECTEURS = {
+  btp: 'BTP / Construction',
+  sante: 'Santé / Paramédical',
+  cvc: 'Plomberie / Chauffage / CVC',
+  signaletique: 'Signalétique / Industrie',
+  chr: 'CHR (café, hôtel, restaurant)',
+  autre: 'Prestation de services',
+};
+
+// Libellés + repères de chiffrage par tranche de CA (Q2).
+// `gain` = fourchette de gain annuel pour 3 à 5 points de marge récupérés.
+const CA_BANDS = {
+  moins500: { label: 'Moins de 500K€', gain: '10 000 à 25 000 €', fit: 'bas' },
+  '500_1m': { label: '500K€ à 1M€', gain: '15 000 à 50 000 €', fit: 'ideal' },
+  '1m_2m': { label: '1M€ à 2M€', gain: '30 000 à 100 000 €', fit: 'ideal' },
+  plus2m: { label: 'Plus de 2M€', gain: '60 000 € et au-delà', fit: 'haut' },
+};
+
+// ---------------------------------------------------------------------
+// LES QUESTIONS
+// ---------------------------------------------------------------------
+const QUESTIONS = {
+  secteur: {
+    id: 'secteur',
+    eyebrow: 'Pour calibrer votre diagnostic',
+    title: 'Dans quel secteur évoluez-vous ?',
+    options: [
+      { id: 'btp', emoji: '🏗️', label: 'BTP / Construction' },
+      { id: 'sante', emoji: '🩺', label: 'Santé / Paramédical' },
+      { id: 'cvc', emoji: '🔧', label: 'Plomberie / Chauffage / CVC' },
+      { id: 'signaletique', emoji: '🪧', label: 'Signalétique / Industrie' },
+      { id: 'chr', emoji: '🍽️', label: 'Secteur CHR (Café, Hôtels, Restaurants)' },
+      { id: 'autre', emoji: '💼', label: 'Autre prestation de services' },
+    ],
+  },
+
+  ca: {
+    id: 'ca',
+    eyebrow: 'Pour calibrer votre diagnostic',
+    title: "Quel est le chiffre d'affaires annuel de votre entreprise ?",
+    help: 'Les fuites de marge ne se chiffrent pas de la même façon selon votre taille.',
+    options: [
+      { id: 'moins500', emoji: '🌱', label: 'Moins de 500K€' },
+      { id: '500_1m', emoji: '📈', label: '500K€ à 1M€' },
+      { id: '1m_2m', emoji: '🚀', label: '1M€ à 2M€' },
+      { id: 'plus2m', emoji: '🏆', label: 'Plus de 2M€' },
+    ],
+  },
+
+  frein: {
+    id: 'frein',
+    eyebrow: 'Le cœur du diagnostic',
+    title: "Aujourd'hui, qu'est-ce qui vous freine le plus ?",
+    help: 'Une seule réponse, celle qui pèse le plus.',
+    options: [
+      {
+        id: 'rentabilite',
+        emoji: '💸',
+        label: 'Je fais du chiffre, mais il ne reste pas assez à la fin',
+        scores: { rentabilite: 3 },
+      },
+      {
+        id: 'tresorerie',
+        emoji: '🌊',
+        label: 'Ma trésorerie est tendue, je vis au rythme des encaissements',
+        scores: { tresorerie: 3 },
+      },
+      {
+        id: 'visibilite',
+        emoji: '🔍',
+        label: 'Je ne sais pas précisément où part ma marge',
+        scores: { visibilite: 3 },
+      },
+      {
+        id: 'pricing',
+        emoji: '🏷️',
+        label: 'Je doute que mes offres ou mes prix soient assez rentables',
+        scores: { pricing: 3 },
+      },
+      {
+        id: 'decision',
+        emoji: '🧭',
+        label: 'Je manque de visibilité pour décider sereinement',
+        scores: { decision: 3 },
+      },
+    ],
+  },
+
+  marge_connue: {
+    id: 'marge_connue',
+    eyebrow: 'Lisibilité',
+    title: 'Connaissez-vous votre marge nette réelle, à un point près, sans ouvrir un fichier ?',
+    options: [
+      { id: 'oui', emoji: '✅', label: 'Oui, je la connais précisément', scores: { visibilite: 0 } },
+      { id: 'apeupres', emoji: '🤔', label: 'À peu près, mais pas au point près', scores: { visibilite: 1 } },
+      { id: 'non', emoji: '🙈', label: 'Honnêtement, non', scores: { visibilite: 2, rentabilite: 1 } },
+    ],
+  },
+
+  tresorerie_etat: {
+    id: 'tresorerie_etat',
+    eyebrow: 'Trésorerie',
+    title: 'Comment décririez-vous votre trésorerie en ce moment ?',
+    options: [
+      { id: 'confortable', emoji: '😌', label: "Confortable, j'ai plusieurs mois d'avance", scores: { tresorerie: 0 } },
+      { id: 'tendue', emoji: '😬', label: "Ça passe, mais c'est tendu certains mois", scores: { tresorerie: 2 } },
+      { id: 'soustension', emoji: '😰', label: 'Sous tension quasi permanente', scores: { tresorerie: 3 } },
+      { id: 'pasvisi', emoji: '🤷', label: "Je n'ai pas de visibilité claire dessus", scores: { tresorerie: 2, visibilite: 1 } },
+    ],
+  },
+
+  tarifs: {
+    id: 'tarifs',
+    eyebrow: 'Tarification',
+    title: 'À quand remonte votre dernière révision de tarifs ?',
+    options: [
+      { id: 'moins6', emoji: '🆕', label: 'Il y a moins de 6 mois', scores: { pricing: 0 } },
+      { id: '1_2ans', emoji: '📅', label: 'Il y a 1 à 2 ans', scores: { pricing: 1 } },
+      { id: 'plus2', emoji: '🕰️', label: 'Plus de 2 ans', scores: { pricing: 2 } },
+      { id: 'jamais', emoji: '🚫', label: 'Je ne révise pas vraiment mes tarifs', scores: { pricing: 3, rentabilite: 1 } },
+    ],
+  },
+
+  decision_repoussee: {
+    id: 'decision_repoussee',
+    eyebrow: 'Décision',
+    title: 'Y a-t-il une décision que vous repoussez, faute de visibilité ?',
+    options: [
+      { id: 'recrutement', emoji: '👥', label: 'Oui, un recrutement', scores: { decision: 2 } },
+      { id: 'investissement', emoji: '💰', label: 'Oui, un investissement', scores: { decision: 2 } },
+      { id: 'restructuration', emoji: '🔄', label: 'Oui, une restructuration ou un changement de modèle', scores: { decision: 2 } },
+      { id: 'plusieurs', emoji: '🗂️', label: 'Plusieurs, en fait', scores: { decision: 3 } },
+      { id: 'non', emoji: '✋', label: 'Non, pas vraiment', scores: { decision: 0 } },
+    ],
+  },
+
+  pilotage: {
+    id: 'pilotage',
+    eyebrow: 'Pilotage',
+    title: 'Comment pilotez-vous vos chiffres aujourd\u2019hui ?',
+    options: [
+      { id: 'bilan', emoji: '📄', label: 'Mon comptable me donne un bilan une fois par an', scores: { visibilite: 2, decision: 1 } },
+      { id: 'banque', emoji: '🏦', label: 'Je regarde mon compte en banque et mes relevés', scores: { visibilite: 2, tresorerie: 1 } },
+      { id: 'tableur', emoji: '📊', label: 'J\u2019ai un tableur que je tiens moi-même', scores: { visibilite: 1 } },
+      { id: 'outil', emoji: '🎛️', label: 'J\u2019ai un tableau de bord à jour en temps réel', scores: { visibilite: 0 } },
+    ],
+  },
+};
+
+// ---------------------------------------------------------------------
+// L'ORDRE DU PARCOURS
+// Le social proof (kind: 'proof') est inséré à mi-parcours, après la
+// question sur la trésorerie. Welcome / proof / gate ne comptent pas
+// dans la barre de progression (seules les questions comptent).
+// ---------------------------------------------------------------------
+const FLOW = [
+  { kind: 'welcome' },
+  { kind: 'question', q: 'secteur' },
+  { kind: 'question', q: 'ca' },
+  { kind: 'question', q: 'frein' },
+  { kind: 'question', q: 'marge_connue' },
+  { kind: 'question', q: 'tresorerie_etat' },
+  { kind: 'question', q: 'tarifs' },
+  { kind: 'question', q: 'decision_repoussee' },
+  { kind: 'question', q: 'pilotage' },
+  { kind: 'gate' },
+  { kind: 'loading' },
+  { kind: 'audit' },
+];
+
+// Nombre total de questions (pour la barre de progression).
+const TOTAL_QUESTIONS = FLOW.filter((s) => s.kind === 'question').length;
+
+// =====================================================================
+// MOTEUR DE SCORING - Horizon Finance
+// ---------------------------------------------------------------------
+// À partir des réponses, calcule :
+//   - le score de chaque axe
+//   - l'axe dominant (= archétype / profil affiché)
+//   - la "température" du lead (pour priorisation côté commercial)
+// =====================================================================
+
+// Additionne les points de chaque option choisie sur chaque axe.
+function computeScores(answers) {
+  const scores = Object.fromEntries(AXES.map((a) => [a, 0]));
+
+  Object.entries(answers).forEach(([questionId, optionId]) => {
+    const question = QUESTIONS[questionId];
+    if (!question) return;
+    const option = question.options.find((o) => o.id === optionId);
+    if (!option || !option.scores) return;
+    Object.entries(option.scores).forEach(([axis, points]) => {
+      if (scores[axis] !== undefined) scores[axis] += points;
+    });
+  });
+
+  return scores;
+}
+
+// Détermine l'axe dominant. En cas d'égalité, l'axe choisi à la
+// question "frein principal" tranche (c'est la priorité déclarée).
+function dominantAxis(scores, answers) {
+  const max = Math.max(...AXES.map((a) => scores[a]));
+  const leaders = AXES.filter((a) => scores[a] === max);
+
+  if (leaders.length === 1) return leaders[0];
+
+  const declared = answers.frein;
+  if (declared && leaders.includes(declared)) return declared;
+
+  // Ordre de priorité par défaut si l'égalité persiste.
+  const priority = ['rentabilite', 'tresorerie', 'visibilite', 'pricing', 'decision'];
+  return priority.find((a) => leaders.includes(a)) || leaders[0];
+}
+
+// Température du lead : Chaud / Tiède / À nurturer.
+// Combine l'adéquation de la cible (CA) et l'intensité des signaux.
+function leadTemperature(answers, scores) {
+  const totalPain = AXES.reduce((sum, a) => sum + scores[a], 0);
+  const caFit = CA_BANDS[answers.ca]?.fit; // 'ideal' | 'haut' | 'bas'
+  const decisionPending = answers.decision_repoussee && answers.decision_repoussee !== 'non';
+
+  const targetFit = caFit === 'ideal' || caFit === 'haut';
+
+  if (targetFit && (totalPain >= 7 || decisionPending)) return 'Chaud';
+  if (targetFit) return 'Tiède';
+  return 'À nurturer';
+}
+
+// Petit résumé exploitable (utile pour le Google Sheet et le debug).
+function buildSummary(answers) {
+  const scores = computeScores(answers);
+  const axis = dominantAxis(scores, answers);
+  return {
+    scores,
+    dominantAxis: axis,
+    temperature: leadTemperature(answers, scores),
+  };
+}
+
+// =====================================================================
+// CONTENU DES AUDITS PERSONNALISÉS - Horizon Finance
+// ---------------------------------------------------------------------
+// 5 archétypes (un par axe dominant). Chaque audit est ensuite
+// personnalisé dynamiquement par buildAudit() avec :
+//   - le secteur (Q1)
+//   - la tranche de CA (chiffrage en euros)
+//   - des observations spécifiques tirées des réponses (Q4 à Q8)
+//
+// Voix : calme, de pair à pair. L'émotionnel d'abord, le chiffre comme
+// preuve. Pas de tirets cadratins. Pas de questions rhétoriques.
+// =====================================================================
+
+const ARCHETYPES = {
+  rentabilite: {
+    profil: "L'effet ciseau",
+    tagline: "Vous faites plus de chiffre qu'avant. Mais il vous en reste moins.",
+    constat:
+      "Votre activité tourne, les clients sont là, le chiffre progresse. Et pourtant, à la fin du mois, il reste moins dans la caisse qu'avant. Ce n'est pas une impression. C'est le piège le plus fréquent entre 500K et 2M de chiffre d'affaires.",
+    mecanisme:
+      "Vous avez recruté pour tenir la charge. Investi dans du matériel, des véhicules, des locaux. Vos frais fixes ont grimpé. Mais vos tarifs, eux, n'ont pas suivi au même rythme. Vos coûts de croissance montent plus vite que vos marges. L'érosion est silencieuse : rien ne vous alerte, jusqu'à ce que le bilan vous la montre, plusieurs dizaines de milliers d'euros plus tard.",
+  },
+
+  tresorerie: {
+    profil: 'Le pilotage au rythme des encaissements',
+    tagline: "Vous faites du chiffre. Mais vous vivez au rythme des rentrées d'argent.",
+    constat:
+      "Vous surveillez votre compte de près. Certains mois passent, d'autres serrent. Il vous arrive de décaler une décision, un achat, un règlement, le temps qu'un encaissement tombe. Ce décalage permanent entre ce que vous facturez et ce que vous encaissez use plus que le travail lui-même.",
+    mecanisme:
+      "Une trésorerie tendue n'est pas toujours un problème de rentabilité. C'est souvent un problème de structure : un BFR mal calibré, des délais de paiement clients qui s'allongent, des charges fixes qui tombent avant les encaissements. Au 4e trimestre 2025, un dirigeant de TPE-PME sur trois jugeait sa trésorerie difficile. La différence se joue sur la visibilité : voir le cash arriver à 90 jours change tout.",
+  },
+
+  visibilite: {
+    profil: 'La marge invisible',
+    tagline: 'Vous savez que quelque chose coince. Vous ne savez pas exactement où.',
+    constat:
+      "Vous faites du chiffre, mais vous ne voyez pas précisément où il part. Vous ne pourriez pas dire, à un point près et sans ouvrir de fichier, quelle est votre marge nette réelle, quelle activité vous rapporte vraiment et laquelle vous coûte de l'argent.",
+    mecanisme:
+      "Ce flou n'est pas un manque de compétence. C'est un manque d'instrument. Votre expert-comptable fait de la conformité : il regarde en arrière, une fois par an. Personne ne vous donne la lecture en temps réel dont vous avez besoin pour piloter. Et tant que ce problème n'est pas réglé, chaque décision que vous prenez est un pari, pas un calcul.",
+  },
+
+  pricing: {
+    profil: 'La sous-tarification silencieuse',
+    tagline: 'Vos coûts ont changé de taille. Vos prix sont restés au même endroit.',
+    constat:
+      "Votre structure de coûts a évolué avec votre croissance. Vos tarifs, eux, n'ont pas été recalibrés au même rythme. Vous travaillez plus, vous facturez plus, mais chaque prestation vous laisse une marge plus fine qu'avant, sans que rien ne le signale.",
+    mecanisme:
+      "Une marge par activité jamais analysée et des tarifs jamais révisés : ce sont les deux postes où se logent le plus souvent les points de marge perdus. Quelques pourcents de tarif, placés sur les bonnes activités, changent l'équation sans toucher au volume. Encore faut-il savoir lesquelles portent vraiment votre rentabilité.",
+  },
+
+  decision: {
+    profil: 'La décision gelée',
+    tagline: "Vous savez où aller. Vous n'avez pas les chiffres pour vous lancer sereinement.",
+    constat:
+      "Il y a une décision que vous repoussez depuis des mois. Pas par manque de courage. Par manque de certitude. Vous savez que c'est la bonne direction, mais vous ne pouvez pas chiffrer le risque, ni dire à partir de quel mois et à quel coût vous lancer.",
+    mecanisme:
+      "Ce n'est pas un problème de courage. C'est un problème de lisibilité financière. Tant que vous ne pouvez pas dire \u00ab à partir de tel mois, à tel coût, voilà l'impact \u00bb, vous attendez. Et chaque mois d'attente a un coût lui aussi invisible : un recrutement non fait, un palier non franchi, une opportunité qui passe.",
+  },
+};
+
+// Nuances de constat selon le secteur (ajoutées si pertinent).
+const SECTEUR_TOUCH = {
+  btp: "Dans le BTP, entre les chantiers qui s'étalent, les avances de matériaux et les paiements qui traînent, l'écart entre le chiffre signé et le cash réellement disponible est particulièrement large.",
+  sante:
+    "Dans le médical et le paramédical, la croissance passe souvent par l'embauche et l'équipement avant que les revenus ne suivent, ce qui crée exactement ce type de décalage.",
+  cvc: "En plomberie, chauffage et CVC, les véhicules, le stock et la main-d'œuvre pèsent lourd dans les frais fixes, et c'est souvent là que la marge se dilue sans qu'on la voie.",
+  signaletique:
+    "En signalétique et dans l'industrie, le poids du matériel, des matières et des délais de production fait que chaque point de marge mal piloté coûte vite plusieurs milliers d'euros.",
+  chr: "Dans la restauration et l'hôtellerie, le poids du loyer, du personnel et de l'énergie, combiné à des marges serrées et à la saisonnalité, fait que quelques points de marge mal pilotés changent tout sur un exercice.",
+  autre:
+    "Sur un business de services physique, avec des charges réelles et une équipe, c'est exactement ce type d'angle mort qui se creuse quand l'entreprise change de taille.",
+};
+
+// Observations spécifiques tirées des réponses (max 4 affichées).
+function buildObservations(answers) {
+  const obs = [];
+
+  if (answers.marge_connue === 'non') {
+    obs.push(
+      "Vous ne connaissez pas votre marge nette à un point près. C'est le tout premier angle mort à lever : on ne pilote pas ce qu'on ne mesure pas."
+    );
+  } else if (answers.marge_connue === 'apeupres') {
+    obs.push(
+      "Vous avez une idée de votre marge, mais pas au point près. C'est souvent dans cet écart \u00ab à peu près \u00bb que se cachent les points perdus."
+    );
+  }
+
+  if (answers.tresorerie_etat === 'soustension') {
+    obs.push(
+      "Votre trésorerie est sous tension quasi permanente. Un prévisionnel à 90 jours transformerait ce stress de fin de mois en décisions anticipées."
+    );
+  } else if (answers.tresorerie_etat === 'tendue') {
+    obs.push(
+      "Votre trésorerie passe mais reste tendue certains mois. C'est le signal d'un BFR ou de délais d'encaissement à recalibrer."
+    );
+  } else if (answers.tresorerie_etat === 'pasvisi') {
+    obs.push(
+      "Vous n'avez pas de visibilité claire sur votre trésorerie. C'est précisément ce point aveugle qui rend chaque engagement plus risqué qu'il ne devrait l'être."
+    );
+  }
+
+  if (answers.tarifs === 'plus2' || answers.tarifs === 'jamais') {
+    obs.push(
+      "Vos tarifs n'ont pas bougé depuis longtemps, alors que vos coûts, eux, ont changé de taille. L'écart se paie en marge, chaque prestation."
+    );
+  }
+
+  if (answers.pilotage === 'bilan') {
+    obs.push(
+      "Votre seule lecture financière, c'est le bilan annuel. Un rétroviseur, là où il vous faudrait un pare-brise pour décider en temps réel."
+    );
+  } else if (answers.pilotage === 'banque') {
+    obs.push(
+      "Vous pilotez au solde bancaire. Il vous dit ce qui reste, jamais ce qui crée ou détruit de la valeur dans votre activité."
+    );
+  }
+
+  if (answers.decision_repoussee && answers.decision_repoussee !== 'non') {
+    const map = {
+      recrutement: 'un recrutement',
+      investissement: 'un investissement',
+      restructuration: 'une restructuration',
+      plusieurs: 'plusieurs décisions',
+    };
+    const quoi = map[answers.decision_repoussee] || 'une décision importante';
+    obs.push(
+      `Vous repoussez ${quoi} faute de visibilité. Cette décision en attente a déjà un coût, même s'il ne se voit pas encore dans vos comptes.`
+    );
+  }
+
+  return obs.slice(0, 4);
+}
+
+// Les 3 piliers de la méthode, formulés pour répondre à l'axe dominant.
+function buildMethode(axis) {
+  const accent = {
+    rentabilite: "On part à la chasse aux points de marge perdus, poste par poste.",
+    tresorerie: "On sécurise d'abord la trésorerie et la visibilité sur le cash.",
+    visibilite: "On vous rend la lecture exacte de vos chiffres, en temps réel.",
+    pricing: "On recalibre les tarifs et les marges sur les bonnes activités.",
+    decision: "On transforme la décision que vous repoussez en calcul clair.",
+  };
+
+  return {
+    accroche: accent[axis] || accent.visibilite,
+    piliers: [
+      {
+        titre: 'Audit de rentabilité réelle',
+        texte:
+          'Marges par activité, coûts réels, point mort, BFR. On voit précisément où votre argent part et où il devrait rester.',
+      },
+      {
+        titre: 'Tableau de bord décisionnel',
+        texte:
+          "Pas un reporting comptable. Un outil de pilotage qui répond en temps réel à : est-ce que je peux recruter, à quel coût, à partir de quand.",
+      },
+      {
+        titre: "Plan d'optimisation",
+        texte:
+          "Ajustement de tarifs, optimisation des coûts, restructuration si nécessaire. Chaque ajustement est chiffré, mesuré, validé.",
+      },
+    ],
+  };
+}
+
+// =====================================================================
+// BUILDER PRINCIPAL
+// =====================================================================
+function buildAudit(answers, dominant) {
+  const base = ARCHETYPES[dominant] || ARCHETYPES.visibilite;
+  const secteurLabel = SECTEURS[answers.secteur] || 'votre secteur';
+  const caBand = CA_BANDS[answers.ca] || CA_BANDS['500_1m'];
+  const isBelowTarget = caBand.fit === 'bas';
+
+  return {
+    axis: dominant,
+    profil: base.profil,
+    tagline: base.tagline,
+    secteurLabel,
+    caLabel: caBand.label,
+    constat: base.constat,
+    secteurTouch: SECTEUR_TOUCH[answers.secteur] || SECTEUR_TOUCH.autre,
+    mecanisme: base.mecanisme,
+    // Chiffrage : fourchette de gain pour 3 à 5 points de marge récupérés.
+    chiffrageMontant: caBand.gain,
+    chiffragePhrase: isBelowTarget
+      ? `Sur votre niveau d'activité, récupérer 3 à 5 points de marge représente déjà ${caBand.gain} par an. L'accompagnement est calibré pour les entreprises à partir de 500K€, mais le mécanisme est le même.`
+      : `Sur votre tranche de chiffre d'affaires, récupérer 3 à 5 points de marge représente ${caBand.gain} par an. Pas en travaillant plus. En pilotant mieux.`,
+    observations: buildObservations(answers),
+    methode: buildMethode(dominant),
+  };
+}
+
+/* =====================================================================
+   GLUE D'AFFICHAGE (aperçu autonome)
+   ---------------------------------------------------------------------
+   Reproduit le comportement des composants React en JS vanilla, en
+   réutilisant les MÊMES données, le MÊME scoring et les MÊMES audits
+   (injectés depuis lib/) et le MÊME CSS. Aucune donnée n'est envoyée.
+   ===================================================================== */
+(function () {
+  const root = document.getElementById('app');
+  const body = document.body;
+
+  const BOOKING_URL =
+    'https://go.faites-parler-vos-chiffres.com/derniere-etape';
+
+  const ARROW =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+
+  function inlineCta() {
+    return `
+      <div class="cta-inline">
+        <a class="btn btn--copper" href="${BOOKING_URL}" target="_blank" rel="noopener noreferrer">Réserver mon échange stratégique ${ARROW}</a>
+        <div class="cta-sub">GRATUIT et SANS ENGAGEMENT</div>
+      </div>`;
+  }
+
+  let state = { step: 0, answers: {}, lead: { prenom: '', email: '', tel: '' }, gateTouched: false };
+  let advTimer = null;
+  let loadTimers = [];
+
+  function clearLoad() {
+    loadTimers.forEach(clearTimeout);
+    loadTimers = [];
+  }
+
+  function questionNumber() {
+    return FLOW.slice(0, state.step + 1).filter((s) => s.kind === 'question').length;
+  }
+
+  function go(delta) {
+    clearTimeout(advTimer);
+    clearLoad();
+    state.step = Math.max(0, Math.min(state.step + delta, FLOW.length - 1));
+    state.gateTouched = false;
+    window.scrollTo({ top: 0 });
+    render();
+  }
+
+  function reset() {
+    clearTimeout(advTimer);
+    clearLoad();
+    state = { step: 0, answers: {}, lead: { prenom: '', email: '', tel: '' }, gateTouched: false };
+    window.scrollTo({ top: 0 });
+    render();
+  }
+
+  function validEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  function validPhone(v) {
+    const digits = (String(v).match(/\d/g) || []).length;
+    return digits >= 9 && digits <= 15;
+  }
+
+  // ----------------------------- vues -----------------------------
+  function welcomeHTML() {
+    return `
+      <div class="welcome">
+        <p class="eyebrow welcome__eyebrow">Le copilote financier des dirigeants de PME</p>
+        <h1 class="welcome__title">Découvrez comment récupérer les <em>fuites de marge cachées</em> dans votre chiffre d'affaires</h1>
+        <p class="welcome__sub">
+          Identifiez en quelques minutes les points de marge qui vous échappent.
+        </p>
+        <div class="welcome__cta">
+          <button class="btn btn--copper" type="button" data-act="start">
+            Commencer ${ARROW}
+          </button>
+          <div class="meta-line">
+            <span>2 min</span><span class="dot"></span>
+            <span>8 questions</span><span class="dot"></span>
+            <span>Réservé aux +500K€</span><span class="dot"></span>
+            <span>Résultat immédiat</span>
+          </div>
+          <div class="figaro">Vu dans <strong>Le Figaro</strong></div>
+        </div>
+      </div>`;
+  }
+
+  function questionHTML(q) {
+    const opts = q.options
+      .map((opt) => {
+        const sel = state.answers[q.id] === opt.id ? ' option--selected' : '';
+        return `
+          <button type="button" class="option${sel}" data-qid="${q.id}" data-oid="${opt.id}">
+            ${opt.emoji ? `<span class="option__emoji" aria-hidden="true">${opt.emoji}</span>` : ''}
+            <span class="option__label">${opt.label}</span>
+            <span class="option__tick" aria-hidden="true"></span>
+          </button>`;
+      })
+      .join('');
+    const help = q.help ? `<p class="q-help">${q.help}</p>` : '';
+    const back =
+      state.step > 1
+        ? `<div style="margin-top:22px"><button class="btn-ghost" type="button" data-act="back"><span aria-hidden="true">&larr;</span> Retour</button></div>`
+        : '';
+    return `
+      <div>
+        <div class="eyebrow">${q.eyebrow}</div>
+        <h2 class="q-title">${q.title}</h2>
+        ${help}
+        <div class="options" role="list">${opts}</div>
+        ${back}
+      </div>`;
+  }
+
+  function gateHTML() {
+    const t = state.gateTouched;
+    const prenomOk = state.lead.prenom.trim().length >= 2;
+    const emailOk = validEmail(state.lead.email.trim());
+    const telOk = validPhone(state.lead.tel);
+    const errP = t && !prenomOk ? `<div class="field__error">Indiquez votre prénom.</div>` : '';
+    const errE = t && !emailOk ? `<div class="field__error">Indiquez un email valide.</div>` : '';
+    const errT = t && !telOk ? `<div class="field__error">Indiquez un numéro de téléphone valide.</div>` : '';
+    return `
+      <div class="gate">
+        <div class="eyebrow">Dernière étape</div>
+        <h2 class="gate__title">Votre diagnostic personnalisé est prêt.</h2>
+        <p class="gate__sub">Renseignez vos coordonnées pour accéder à votre diagnostic complet. Résultat immédiat, affiché à l'écran.</p>
+        <div class="form">
+          <div class="field">
+            <label for="prenom">Votre prénom</label>
+            <input id="prenom" type="text" autocomplete="given-name" placeholder="Prénom" value="${state.lead.prenom.replace(/"/g, '&quot;')}" />
+            ${errP}
+          </div>
+          <div class="field">
+            <label for="email">Votre email professionnel</label>
+            <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="vous@votre-entreprise.fr" value="${state.lead.email.replace(/"/g, '&quot;')}" />
+            ${errE}
+          </div>
+          <div class="field">
+            <label for="tel">Votre téléphone</label>
+            <input id="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" value="${state.lead.tel.replace(/"/g, '&quot;')}" />
+            ${errT}
+          </div>
+          <button class="btn btn--copper btn--block" type="button" data-act="submit">
+            Découvrir mon diagnostic <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+        </div>
+        <div class="gate__privacy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="4" y="11" width="16" height="9" rx="2" fill="currentColor"></rect>
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" fill="none"></path>
+          </svg>
+          Vos réponses restent confidentielles. Aucun spam.
+        </div>
+      </div>`;
+  }
+
+  function loadingHTML() {
+    const secteur = SECTEURS[state.answers.secteur] || 'votre activité';
+    const ca = (CA_BANDS[state.answers.ca] && CA_BANDS[state.answers.ca].label) || 'votre tranche de CA';
+    const steps = [
+      `Lecture de votre profil ${secteur}`,
+      'Identification de votre fuite de marge principale',
+      `Comparaison avec les dirigeants à ${ca}`,
+      'Génération de votre plan personnalisé',
+    ];
+    const items = steps
+      .map(
+        (label) => `
+        <div class="steps__item">
+          <span class="steps__check">
+            <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 6.5 L4.5 10 L11 2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </span>
+          <span>${label}</span>
+        </div>`
+      )
+      .join('');
+    return `
+      <div class="loading">
+        <div class="scanner">
+          <svg viewBox="0 0 100 100">
+            <circle class="scanner__track" cx="50" cy="50" r="40"></circle>
+            <circle class="scanner__arc" cx="50" cy="50" r="40"></circle>
+          </svg>
+        </div>
+        <h2 class="loading__title">Analyse de vos réponses</h2>
+        <p class="loading__sub">Nous construisons votre diagnostic personnalisé.</p>
+        <div class="steps">${items}</div>
+      </div>`;
+  }
+
+  function scissorHTML() {
+    return `
+      <div class="scissor">
+        <svg viewBox="0 0 600 300" role="img" aria-label="Le chiffre d'affaires progresse pendant que la marge stagne : l'effet ciseau.">
+          <polygon class="gap-fill" points="40,215 175,175 310,140 445,100 560,65 560,240 445,236 310,232 175,228 40,222"></polygon>
+          <polyline class="path-ca" points="40,215 175,175 310,140 445,100 560,65"></polyline>
+          <polyline class="path-marge" points="40,222 175,228 310,232 445,236 560,240"></polyline>
+          <text x="556" y="52" text-anchor="end" font-size="18" font-weight="700" fill="#13204D" font-family="'Open Sans', sans-serif">CA</text>
+          <text x="556" y="262" text-anchor="end" font-size="18" font-weight="700" fill="#ec3e2d" font-family="'Open Sans', sans-serif">Marge</text>
+        </svg>
+        <div class="scissor__legend">
+          <span class="scissor__key"><span class="scissor__swatch" style="background:#13204D"></span>Chiffre d'affaires</span>
+          <span class="scissor__key"><span class="scissor__swatch" style="background:#ec3e2d"></span>Marge</span>
+        </div>
+      </div>`;
+  }
+
+  function auditHTML() {
+    const scores = computeScores(state.answers);
+    const dominant = dominantAxis(scores, state.answers);
+    const a = buildAudit(state.answers, dominant);
+
+    const obs =
+      a.observations.length > 0
+        ? `<section class="section">
+             <div class="section__label">Vos points d'attention</div>
+             <div class="obs">${a.observations
+               .map(
+                 (o) =>
+                   `<div class="obs__item"><span class="obs__dot" aria-hidden="true"></span><span class="obs__text">${o}</span></div>`
+               )
+               .join('')}</div>
+           </section>`
+        : '';
+
+    const piliers = a.methode.piliers
+      .map(
+        (p, i) => `
+        <div class="pillar">
+          <div class="pillar__no">${String(i + 1).padStart(2, '0')}</div>
+          <div>
+            <div class="pillar__title">${p.titre}</div>
+            <div class="pillar__text">${p.texte}</div>
+          </div>
+        </div>`
+      )
+      .join('');
+
+    return `
+      <div class="audit">
+        <header class="audit__head">
+          <div class="audit__head-inner step-in">
+            <div class="audit__meta">
+              <span>DIAGNOSTIC PERSONNALISÉ</span><span>·</span><span>${a.secteurLabel}</span><span>·</span><span>${a.caLabel}</span>
+            </div>
+            <div class="eyebrow" style="color:var(--red);margin-bottom:10px">Votre profil</div>
+            <h1 class="audit__profil">${a.profil}</h1>
+            <p class="audit__tagline">${a.tagline}</p>
+          </div>
+        </header>
+        <div class="audit__body">
+          <section class="section">
+            <div class="section__label">Le constat</div>
+            <p class="prose">${a.constat}</p>
+            <p class="prose">${a.secteurTouch}</p>
+          </section>
+          <section class="section">
+            <div class="section__label">Ce qui se passe vraiment</div>
+            <p class="prose">${a.mecanisme}</p>
+            ${scissorHTML()}
+          </section>
+          <section class="section">
+            <div class="section__label">Ce que ça représente</div>
+            <div class="figure-card">
+              <div><span class="figure-card__num">${a.chiffrageMontant}</span><span class="figure-card__unit">/ an</span></div>
+              <p class="figure-card__text">${a.chiffragePhrase}</p>
+            </div>
+            ${inlineCta()}
+          </section>
+          ${obs}
+          <section class="section">
+            <div class="section__label">Comment on récupère ces points</div>
+            <p class="method__accroche">${a.methode.accroche}</p>
+            <div class="pillars">${piliers}</div>
+            ${inlineCta()}
+          </section>
+          <div class="cta">
+            <div class="cta__label">La suite</div>
+            <h2 class="cta__title">Échangeons 30 minutes sur votre pilotage</h2>
+            <p class="cta__text">Un échange stratégique pour transformer ce diagnostic en plan concret : où sont vos points de marge, combien vous pouvez en récupérer, et par où commencer.</p>
+            <a class="btn btn--copper" href="${BOOKING_URL}" target="_blank" rel="noopener noreferrer">Réserver mon échange stratégique ${ARROW}</a>
+            <div class="cta-sub cta-sub--light">GRATUIT et SANS ENGAGEMENT</div>
+            <div class="cta__reassure"><span aria-hidden="true">•</span> Nombre de dirigeants accompagnés simultanément limité.</div>
+          </div>
+        </div>
+        <footer class="foot">
+          Faites Parler Vos Chiffres · Intervenant cité dans Le Figaro<br />
+          <a href="#">Mentions légales</a> · <a href="#">Politique de confidentialité</a>
+        </footer>
+      </div>`;
+  }
+
+  // --------------------------- rendu ------------------------------
+  function render() {
+    const step = FLOW[state.step];
+    const dark = step.kind === 'welcome' || step.kind === 'loading';
+
+    if (step.kind === 'audit') {
+      root.className = 'app';
+      body.style.background = 'var(--paper)';
+      root.innerHTML = auditHTML();
+      return;
+    }
+
+    root.className = 'app' + (dark ? ' app--dark' : '');
+    body.style.background = dark ? 'var(--navy)' : 'var(--paper)';
+
+    let inner = '';
+    if (step.kind === 'welcome') inner = welcomeHTML();
+    else if (step.kind === 'question') inner = questionHTML(QUESTIONS[step.q]);
+    else if (step.kind === 'gate') inner = gateHTML();
+    else if (step.kind === 'loading') inner = loadingHTML();
+
+    const progress =
+      step.kind === 'question'
+        ? `<div class="progress">
+             <div class="progress__row">
+               <span class="progress__brand">Faites Parler Vos Chiffres</span>
+               <span class="progress__count">Question ${questionNumber()} / ${TOTAL_QUESTIONS}</span>
+             </div>
+             <div class="progress__track">
+               <div class="progress__fill" style="width:${(questionNumber() / TOTAL_QUESTIONS) * 100}%"></div>
+             </div>
+           </div>`
+        : '';
+
+    root.innerHTML = `${progress}<div class="stage"><div class="panel"><div class="step-in">${inner}</div></div></div>`;
+    wire(step);
+  }
+
+  function wire(step) {
+    if (step.kind === 'welcome') {
+      root.querySelector('[data-act="start"]').addEventListener('click', () => go(1));
+    } else if (step.kind === 'question') {
+      root.querySelectorAll('.option').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const qid = btn.getAttribute('data-qid');
+          const oid = btn.getAttribute('data-oid');
+          state.answers[qid] = oid;
+          root.querySelectorAll('.option').forEach((o) => o.classList.remove('option--selected'));
+          btn.classList.add('option--selected');
+          clearTimeout(advTimer);
+          advTimer = setTimeout(() => go(1), 220);
+        });
+      });
+      const back = root.querySelector('[data-act="back"]');
+      if (back) back.addEventListener('click', () => go(-1));
+    } else if (step.kind === 'gate') {
+      const p = root.querySelector('#prenom');
+      const e = root.querySelector('#email');
+      const tel = root.querySelector('#tel');
+      p.addEventListener('input', () => { state.lead.prenom = p.value; });
+      e.addEventListener('input', () => { state.lead.email = e.value; });
+      tel.addEventListener('input', () => { state.lead.tel = tel.value; });
+      const submit = () => {
+        state.lead.prenom = p.value;
+        state.lead.email = e.value;
+        state.lead.tel = tel.value;
+        const ok = p.value.trim().length >= 2 && validEmail(e.value.trim()) && validPhone(tel.value);
+        if (ok) { go(1); } else { state.gateTouched = true; render(); }
+      };
+      root.querySelector('[data-act="submit"]').addEventListener('click', submit);
+      [p, e, tel].forEach((inp) =>
+        inp.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') submit(); })
+      );
+    } else if (step.kind === 'loading') {
+      const items = root.querySelectorAll('.steps__item');
+      const BASE = 550;
+      const STEP = 650;
+      items.forEach((el, i) => {
+        loadTimers.push(setTimeout(() => el.classList.add('steps__item--active'), BASE + i * STEP));
+      });
+      loadTimers.push(setTimeout(() => go(1), BASE + items.length * STEP + 350));
+    }
+  }
+
+  const resetBtn = document.getElementById('pv-reset');
+  if (resetBtn) resetBtn.addEventListener('click', reset);
+
+  render();
+})();
+
+</script>
+</body>
+</html>
