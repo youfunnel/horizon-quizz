@@ -75,6 +75,33 @@ aux en-têtes grâce au tableau d'alignement affiché par le script.
 
 ---
 
+## 3 ter. Déploiement automatisé en CLI (clasp + vercel)
+
+Tout le déploiement du webhook et la mise à jour de Vercel sont scriptés. Une
+seule authentification manuelle par outil est nécessaire (flux OAuth, à faire
+sur votre poste, une fois) :
+
+```bash
+npm i -g @google/clasp vercel
+clasp login          # OAuth Google (ouvre le navigateur une fois)
+vercel login         # OAuth Vercel
+vercel link          # relie ce dossier au projet Vercel (une fois)
+```
+
+Ensuite, tout passe par npm :
+
+| Script | Rôle |
+| --- | --- |
+| `npm run deploy:apps-script` | Copie `google-apps-script.gs` vers `apps-script/Code.gs`, crée (si besoin) le projet clasp lié au Sheet, `clasp push` + `clasp deploy`, récupère l'URL `/exec` dans `.webhook-url`. |
+| `npm run sync:webhook` | Pousse l'URL `/exec` dans `GOOGLE_SHEETS_WEBHOOK_URL` (Production) et redéploie la prod jusqu'à Ready. |
+| `npm run ship:leads` | Enchaîne les deux ci-dessus puis `verify:leads`, en s'arrêtant au premier échec. |
+
+Le manifeste `apps-script/appsscript.json` fixe le Web App en accès
+`ANYONE` et exécution `USER_DEPLOYING`. Les identifiants (`.clasprc.json`,
+`.clasp.json`, `.webhook-url`) sont ignorés par git.
+
+---
+
 ## 4. Tout est éditable au même endroit
 
 | Fichier | Ce qu'on y modifie |

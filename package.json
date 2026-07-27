@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "test": "node --test \"test/**/*.test.mjs\"",
-    "verify:leads": "node scripts/verify-leads-pipeline.mjs"
+    "verify:leads": "node scripts/verify-leads-pipeline.mjs",
+    "deploy:apps-script": "node scripts/deploy-apps-script.mjs",
+    "sync:webhook": "node scripts/sync-webhook.mjs",
+    "ship:leads": "node scripts/ship-leads.mjs"
   },
   "dependencies": {
     "next": "14.2.35",

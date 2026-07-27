@@ -21,3 +21,12 @@ npm-debug.log*
 # Divers
 .DS_Store
 .vercel
+
+# clasp : identifiants et fichier de projet (contient le scriptId)
+.clasprc.json
+.clasp.json
+apps-script/.clasp.json
+apps-script/Code.gs
+
+# URL /exec produite localement par deploy:apps-script (non versionnee)
+.webhook-url

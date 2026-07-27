@@ -1,0 +1,5 @@
+# On ne pousse QUE le manifeste et le code du Web App.
+# Tout le reste (y compris .clasp.json et les fichiers Next.js) est ignore.
+**/**
+!appsscript.json
+!Code.gs
