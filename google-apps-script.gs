@@ -27,8 +27,13 @@
 // soit le fichier auquel le script est rattache).
 var SPREADSHEET_ID = '10t4yJeED8WuwOOr9woiXXb688Eq6LkYvxcUcBGEeAco';
 
-// Onglet ou ecrire les leads (cree automatiquement s'il n'existe pas).
+// Onglet ou ecrire les leads. IMPORTANT : on cible par NOM. Si cet onglet
+// est introuvable, on s'arrete proprement (on n'ecrit JAMAIS ailleurs).
 var SHEET_NAME = 'Leads';
+
+// gid attendu de l'onglet Leads (fourni par le client). Sert uniquement de
+// repere de diagnostic dans les logs, la cible reste le NOM ci-dessus.
+var EXPECTED_GID = 1530684739;
 
 // Nombre exact de colonnes attendu (plage A:AD).
 var EXPECTED_COLS = 30;
@@ -157,9 +162,32 @@ function buildRowFromLegacy_(data) {
 function getSheet_() {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   var sheet = ss.getSheetByName(SHEET_NAME);
+
+  // Verification au demarrage : si l'onglet cible est introuvable, on logge
+  // la liste des onglets existants avec leur gid et on s'arrete proprement,
+  // plutot que de creer un onglet fantome ou d'ecrire au mauvais endroit.
   if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
+    var existants = ss.getSheets().map(function (s) {
+      return '"' + s.getName() + '" (gid=' + s.getSheetId() + ')';
+    });
+    var msg =
+      'Onglet "' + SHEET_NAME + '" introuvable dans le fichier ' +
+      SPREADSHEET_ID + ' (gid attendu ' + EXPECTED_GID + '). ' +
+      'Onglets presents : ' + existants.join(', ') + '. ' +
+      'Aucune ecriture effectuee.';
+    Logger.log(msg);
+    throw new Error(msg);
   }
+
+  // Repere de diagnostic : on signale si le gid ne correspond pas a l'attendu
+  // (l'onglet a peut-etre ete recree). On ecrit quand meme, la cible est le nom.
+  if (sheet.getSheetId() !== EXPECTED_GID) {
+    Logger.log(
+      'Attention : onglet "' + SHEET_NAME + '" trouve avec gid ' +
+        sheet.getSheetId() + ' au lieu de ' + EXPECTED_GID + '.'
+    );
+  }
+
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');

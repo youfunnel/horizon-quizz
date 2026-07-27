@@ -47,9 +47,31 @@ L'onglet `Leads` et les en-têtes (prénom, email, profil, température, secteur
 | Variable | Rôle |
 | --- | --- |
 | `GOOGLE_SHEETS_WEBHOOK_URL` | L'URL `/exec` du Web App Apps Script (étape 2). |
+| `GOOGLE_SHEETS_WEBHOOK_URL_FALLBACK` | (Optionnel) Second webhook de secours si l'écriture principale échoue. |
 | `NEXT_PUBLIC_BOOKING_URL` | La page de prise de RDV System.io (boutons « Réserver » de l'audit). |
 
-> Si `GOOGLE_SHEETS_WEBHOOK_URL` n'est pas défini, le quiz **fonctionne quand même** : l'audit s'affiche, le lead n'est simplement pas enregistré (et un avertissement est loggé côté serveur). On ne bloque jamais l'utilisateur.
+> Si `GOOGLE_SHEETS_WEBHOOK_URL` n'est pas défini, le quiz **fonctionne quand même** : l'audit s'affiche, mais le lead n'est **pas** enregistré. Dans ce cas l'API renvoie une vraie erreur (502) et logge le lead complet en JSON (marqueur `[LEAD_FALLBACK]`) pour qu'il reste récupérable dans les logs. On ne bloque jamais l'utilisateur.
+
+---
+
+## 3 bis. Vérifier le pipeline de leads
+
+Un script autonome teste de bout en bout le webhook Apps Script (sonde `GET`
+puis `POST` d'un lead de test marqué `VERIF-<timestamp>` au format 30 colonnes).
+Il affiche l'alignement des 30 valeurs (index + colonne attendue) et un
+diagnostic actionnable (page de login Google, 302, 401, 403, timeout, succès).
+
+```bash
+# Via la variable d'environnement
+GOOGLE_SHEETS_WEBHOOK_URL="https://script.google.com/.../exec" npm run verify:leads
+
+# ou en passant l'URL en argument
+node scripts/verify-leads-pipeline.mjs "https://script.google.com/.../exec"
+```
+
+Sortie en code `0` si tout est bon, `1` sinon. Après un passage réussi, une
+ligne `VERIF-<timestamp>` doit apparaître dans l'onglet `Leads` : comparez-la
+aux en-têtes grâce au tableau d'alignement affiché par le script.
 
 ---
 

@@ -49,6 +49,25 @@ async function postToWebhook(url, body, label) {
       console.error(`[submit] Webhook ${label} a repondu`, res.status);
       return false;
     }
+
+    // Un statut 200 ne suffit pas : Apps Script renvoie 200 meme en cas
+    // d'echec logique ({ok:false}) ou de page de login Google (HTML). On
+    // exige donc un corps JSON avec ok===true pour valider l'ecriture.
+    const text = await res.text();
+    let body;
+    try {
+      body = JSON.parse(text);
+    } catch (e) {
+      console.error(
+        `[submit] Webhook ${label} : reponse non JSON (page de login ?), extrait :`,
+        text.slice(0, 120)
+      );
+      return false;
+    }
+    if (!body || body.ok !== true) {
+      console.error(`[submit] Webhook ${label} a renvoye ok=false :`, body && body.error);
+      return false;
+    }
     return true;
   } catch (err) {
     console.error(`[submit] Echec de l'envoi au webhook ${label} :`, err?.message || err);
