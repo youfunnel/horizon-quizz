@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------------
 // Le front envoie ici toutes les reponses + email + scoring + UTM.
 // On relaie vers le Web App Google Apps Script (GOOGLE_SHEETS_WEBHOOK_URL)
-// qui ajoute une ligne au Google Sheet.
+// qui ajoute une ligne au Google Sheet (format tableau de 30 colonnes,
+// plage A:AD).
 //
 // Principe UX : on ne bloque jamais l'affichage de l'audit cote front.
 // MAIS on ne ment plus sur le resultat : si la persistance echoue, on
@@ -11,6 +12,8 @@
 // logs (canal de secours JSON) pour qu'aucun lead ne soit perdu en
 // silence. Un webhook de secours optionnel peut aussi etre configure.
 // =====================================================================
+
+import { buildLeadRow, ensureRowLength, LEAD_ROW_LENGTH } from '../../../lib/leadRow.mjs';
 
 export const runtime = 'nodejs';
 
@@ -32,12 +35,12 @@ function logLeadFallback(record, cause) {
 
 // Tente une ecriture vers un webhook Apps Script. Renvoie true si l'ecriture
 // a bien ete acceptee (HTTP 2xx), false sinon. Ne jette jamais.
-async function postToWebhook(url, record, label) {
+async function postToWebhook(url, body, label) {
   try {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(record),
+      body: JSON.stringify(body),
       // Apps Script peut etre un peu lent : on borne le temps d'attente.
       signal: AbortSignal.timeout(8000),
     });
@@ -64,11 +67,32 @@ export async function POST(request) {
   const webhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
   const webhookFallback = process.env.GOOGLE_SHEETS_WEBHOOK_URL_FALLBACK;
 
-  // Enrichissement serveur (horodatage fiable).
-  const record = {
-    ...payload,
-    receivedAt: new Date().toISOString(),
-  };
+  // Le front peut envoyer soit { record, row } (nouveau client), soit
+  // directement l'objet structure (ancien client encore en cache pendant
+  // que la pub tourne). On accepte les deux pour ne jamais casser un lead.
+  const record = payload.record || payload;
+
+  // Horodatage fiable cote serveur (autorite sur la colonne date).
+  record.receivedAt = new Date().toISOString();
+
+  // Reconstruction de la ligne 30 colonnes depuis l'objet structure.
+  // On reconstruit systematiquement pour appliquer l'horodatage serveur,
+  // sauf si l'on ne recoit qu'un tableau brut sans objet structure.
+  let row;
+  if (Array.isArray(payload.row) && !payload.record && !record.labels) {
+    row = payload.row;
+    row[0] = record.receivedAt;
+  } else {
+    row = buildLeadRow(record);
+  }
+
+  // Controle de longueur : on complete / tronque a 30 et on logge tout ecart.
+  const { row: safeRow, delta } = ensureRowLength(row, LEAD_ROW_LENGTH);
+  if (delta !== 0) {
+    console.error(
+      `[submit] Ligne lead de longueur inattendue (ecart ${delta}), normalisee a ${LEAD_ROW_LENGTH}.`
+    );
+  }
 
   if (!webhook) {
     // Variable manquante en prod = cause la plus frequente de rupture.
@@ -79,15 +103,15 @@ export async function POST(request) {
     return Response.json({ ok: false, persisted: false, error: 'no_webhook' }, { status: 502 });
   }
 
-  // 1) Ecriture principale.
-  const ok = await postToWebhook(webhook, record, 'principal');
+  // 1) Ecriture principale (on transmet la ligne 30 colonnes).
+  const ok = await postToWebhook(webhook, { row: safeRow }, 'principal');
   if (ok) {
     return Response.json({ ok: true, persisted: true });
   }
 
   // 2) Ecriture de secours vers un second webhook si configure.
   if (webhookFallback) {
-    const okFallback = await postToWebhook(webhookFallback, record, 'secours');
+    const okFallback = await postToWebhook(webhookFallback, { row: safeRow }, 'secours');
     if (okFallback) {
       console.warn('[submit] Ecriture principale KO, lead persiste via le webhook de secours.');
       return Response.json({ ok: true, persisted: true, viaFallback: true });

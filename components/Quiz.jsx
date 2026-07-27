@@ -18,6 +18,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { FLOW, QUESTIONS, TOTAL_QUESTIONS } from '../lib/quizData';
 import { buildSummary } from '../lib/scoring';
 import { track } from '../lib/track';
+import { buildLeadRow } from '../lib/leadRow.mjs';
 
 import Welcome from './Welcome';
 import QuestionStep from './QuestionStep';
@@ -107,7 +108,8 @@ export default function Quiz() {
     setLead(data);
 
     const summary = buildSummary(answers);
-    const payload = {
+    // Objet structuré du lead (source des colonnes du Sheet).
+    const record = {
       prenom: data.prenom,
       email: data.email,
       telephone: data.telephone,
@@ -119,6 +121,12 @@ export default function Quiz() {
       utm,
       page: typeof window !== 'undefined' ? window.location.href : '',
     };
+
+    // Construction de la ligne au format 30 colonnes (plage A:AD) cote
+    // client. Le serveur reconstruit la meme ligne avec un horodatage
+    // fiable ; on envoie les deux (record + row) pour rester robuste.
+    const row = buildLeadRow(record);
+    const payload = { record, row };
 
     // Envoi non bloquant : on n'attend pas la réponse pour afficher l'audit,
     // mais on inspecte le résultat pour signaler un échec de persistance en
