@@ -1,0 +1,23 @@
+# Dependances
+/node_modules
+
+# Build Next.js
+/.next
+/out
+
+# Production
+/build
+
+# Variables d'environnement locales
+.env
+.env.local
+.env*.local
+.env.prod.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Divers
+.DS_Store
+.vercel
