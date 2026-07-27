@@ -120,14 +120,29 @@ export default function Quiz() {
       page: typeof window !== 'undefined' ? window.location.href : '',
     };
 
-    // Envoi non bloquant : on n'attend pas la réponse pour continuer.
+    // Envoi non bloquant : on n'attend pas la réponse pour afficher l'audit,
+    // mais on inspecte le résultat pour signaler un échec de persistance en
+    // console (fini le faux succès silencieux). L'UX n'est jamais bloquée.
     try {
       fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
         keepalive: true,
-      }).catch(() => {});
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            console.error('[quiz] Lead non persisté, statut', res.status);
+            return;
+          }
+          const data = await res.json().catch(() => ({}));
+          if (data && data.persisted === false) {
+            console.error('[quiz] Lead non persisté (persisted=false).');
+          }
+        })
+        .catch((e) => {
+          console.error('[quiz] Échec de l’envoi du lead :', e?.message || e);
+        });
     } catch (e) {
       /* on ne bloque jamais l'utilisateur */
     }
